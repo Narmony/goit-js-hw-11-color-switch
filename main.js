@@ -7,30 +7,44 @@ const colors = [
   '#795548',
 ];
 
-const body = document.querySelector('body');
-const startBtnRef = document.querySelector('[data-action="start"]');
-const stopBtnRef = document.querySelector('[data-action="stop"]');
+const body = document.body;
+const refs = {
+  startBtn: document.querySelector('[data-action="start"]'),
+  stopBtn: document.querySelector('[data-action="stop"]'),
+};
+let timerId;
 
 const randomIntegerFromInterval = (min, max) => {
   return Math.floor(Math.random() * (max - min + 1) + min);
 };
 
-// console.log(randomIntegerFromInterval(0, colors.length - 1));
+// function changeColor() { 
 // body.style.backgroundColor = colors[randomIntegerFromInterval(0, colors.length - 1)];
+// }
+
+// refs.startBtn.addEventListener('click', (event) => { 
+//     timerId = setInterval(changeColor, 2000);
+//     event.target.setAttribute('disabled', 'disabled');
+// })
+
+// refs.stopBtn.addEventListener('click', () => { 
+//     clearInterval(timerId);
+//     refs.startBtn.removeAttribute('disabled', 'disabled');
+// })
+refs.startBtn.addEventListener('click', changeColor);
+refs.stopBtn.addEventListener('click', stopChangeColor);
 
 function changeColor() { 
-body.style.backgroundColor = colors[randomIntegerFromInterval(0, colors.length - 1)];
+  timerId = setInterval(function () { body.style.backgroundColor = colors[randomIntegerFromInterval(0, colors.length - 1)] }, 2000);
+  refs.startBtn.setAttribute('disabled', 'disabled');
+  refs.stopBtn.addEventListener('click', stopChangeColor);
 }
 
-// const timerId = setInterval(changeColor, 2000);
-let timerId;
-startBtnRef.addEventListener('click', (event) => { 
-    timerId = setInterval(changeColor, 2000);
-    event.target.setAttribute('disabled', 'disabled');
-   
-})
+function stopChangeColor() { 
+  clearInterval(timerId);
+  refs.startBtn.removeAttribute('disabled', 'disabled');
+  refs.stopBtn.removeEventListener('click', stopChangeColor);
+  //  console.log('click')
+}
 
-stopBtnRef.addEventListener('click', () => { 
-    clearInterval(timerId);
-    startBtnRef.removeAttribute('disabled', 'disabled');
-})
+
